@@ -1,522 +1,56 @@
-const features = [
-  {
-    icon: "▣",
-    title: "Digitales QR-Menü",
-    description:
-      "Ihre Speisekarte digital, modern und jederzeit aktualisierbar.",
-  },
-  {
-    icon: "★",
-    title: "Google Bewertungen",
-    description:
-      "Gäste direkt zur Google-Bewertung führen und mehr Bewertungen sammeln.",
-  },
-  {
-    icon: "⌁",
-    title: "NFC & QR",
-    description:
-      "Eine Karte für alle wichtigen digitalen Touchpoints Ihres Restaurants.",
-  },
-  {
-    icon: "↗",
-    title: "Mehr Kontrolle",
-    description:
-      "Verwalten Sie Inhalte, Angebote und Restaurantdaten zentral in Qartivo.",
-  },
+const featureCards = [
+  { icon: "menu", eyebrow: "01 / Menü", title: "Digitales Menü", description: "Ihre Karte lebt dort, wo Ihre Gäste suchen: schnell, schön und jederzeit aktuell." },
+  { icon: "qr", eyebrow: "02 / Zugang", title: "QR-Code", description: "Ein Scan genügt. Platzieren Sie Ihren persönlichen QR-Code auf jedem Tisch." },
+  { icon: "star", eyebrow: "03 / Vertrauen", title: "Google Bewertungen", description: "Machen Sie aus zufriedenen Gästen sichtbare Empfehlungen für Ihr Restaurant." },
+  { icon: "nfc", eyebrow: "04 / Verbindung", title: "NFC", description: "Ein kurzer Tap verbindet Ihre Gäste direkt mit Menü, Bewertungen und mehr." },
 ];
 
 const steps = [
-  {
-    number: "01",
-    title: "Registrieren",
-    description: "Konto erstellen und Restaurant hinzufügen.",
-  },
-  {
-    number: "02",
-    title: "Einrichten",
-    description: "Menü, Bilder und Restaurantinformationen eintragen.",
-  },
-  {
-    number: "03",
-    title: "QR-Code teilen",
-    description: "QR-Code auf Tischen, Karten oder Schildern einsetzen.",
-  },
+  { number: "01", title: "Restaurant erstellen", description: "Profil anlegen und Ihre Marke hinterlegen." },
+  { number: "02", title: "Menü einrichten", description: "Gerichte, Preise und Kategorien hinzufügen." },
+  { number: "03", title: "QR-Code teilen", description: "Aufstellen, scannen lassen und loslegen." },
 ];
 
 const plans = [
-  {
-    name: "Starter",
-    price: "0",
-    description: "Für Restaurants, die Qartivo kennenlernen möchten.",
-    features: ["Digitales Menü", "QR-Code", "Restaurantprofil"],
-    featured: false,
-  },
-  {
-    name: "Pro",
-    price: "19",
-    description: "Für Restaurants, die digital wachsen möchten.",
-    features: [
-      "Alles aus Starter",
-      "Google Bewertungen",
-      "NFC Unterstützung",
-      "Erweiterte Funktionen",
-    ],
-    featured: true,
-  },
-  {
-    name: "Business",
-    price: "39",
-    description: "Für professionelle Restaurantbetriebe.",
-    features: [
-      "Alles aus Pro",
-      "Mehrere Standorte",
-      "Erweiterte Verwaltung",
-      "Priorisierter Support",
-    ],
-    featured: false,
-  },
+  { name: "Starter", price: "0", description: "Für den unkomplizierten Einstieg.", features: ["Digitales Menü", "QR-Code", "Restaurantprofil"] },
+  { name: "Pro", price: "19", description: "Für Restaurants, die digital wachsen.", features: ["Alles aus Starter", "Google Bewertungen", "NFC Unterstützung", "Erweiterte Funktionen"], featured: true },
+  { name: "Business", price: "39", description: "Für professionelle Restaurantbetriebe.", features: ["Alles aus Pro", "Mehrere Standorte", "Erweiterte Verwaltung", "Priorisierter Support"] },
 ];
 
+function Icon({ name, size = 20 }: { name: string; size?: number }) {
+  const common = { width: size, height: size, viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: 1.7, strokeLinecap: "round" as const, strokeLinejoin: "round" as const, "aria-hidden": true };
+  if (name === "menu") return <svg {...common}><path d="M4 5h16M4 12h16M4 19h10" /></svg>;
+  if (name === "qr") return <svg {...common}><path d="M4 4h6v6H4zM14 4h6v6h-6zM4 14h6v6H4zM14 14h2M20 14v6M14 18h3" /></svg>;
+  if (name === "star") return <svg {...common}><path d="m12 3 2.8 5.7 6.2.9-4.5 4.4 1.1 6.2-5.6-2.9-5.6 2.9 1.1-6.2L3 9.6l6.2-.9L12 3Z" /></svg>;
+  if (name === "nfc") return <svg {...common}><path d="M7.5 16.5a6.4 6.4 0 0 1 0-9M11 14a3.6 3.6 0 0 1 0-4M15.5 7.5a6.4 6.4 0 0 1 0 9M13 10a3.6 3.6 0 0 1 0 4M12 12h.01" /></svg>;
+  if (name === "arrow") return <svg {...common}><path d="M5 12h13M13 6l6 6-6 6" /></svg>;
+  if (name === "check") return <svg {...common}><path d="m5 12 4 4L19 6" /></svg>;
+  return <svg {...common}><circle cx="12" cy="12" r="8" /></svg>;
+}
+
+function Logo({ light = false }: { light?: boolean }) {
+  return <a href="#top" className={`logo ${light ? "logo-light" : ""}`} aria-label="qartivo Startseite"><span className="logo-mark">Q</span><span>qartivo</span></a>;
+}
+
+function MenuMockup() {
+  return <div className="menu-device" aria-label="Vorschau des digitalen Menüs von La Tavola"><div className="menu-topbar"><span className="tiny-label">LA TAVOLA / MENU</span><span className="menu-avatar">LT</span></div><div className="menu-heading"><p className="menu-kicker">ITALIENISCHE KÜCHE · BASEL</p><h3>La Tavola</h3><p>Benvenuti. Schön, dass Sie da sind.</p></div><div className="menu-tabs"><span className="active">Antipasti</span><span>Pizza</span><span>Pasta</span><span>Dessert</span></div><div className="dish-list"><div className="dish"><div><strong>Burrata Pugliese</strong><p>Tomate · Basilikum · Olivenöl</p></div><b>14.50 €</b></div><div className="dish"><div><strong>Bruschetta Classica</strong><p>San Marzano · Knoblauch · Basilikum</p></div><b>9.50 €</b></div><div className="dish"><div><strong>Vitello Tonnato</strong><p>Kalb · Thunfisch · Kapern</p></div><b>16.90 €</b></div></div><div className="menu-review"><span className="review-star">★</span><div><strong>Gefällt Ihnen unser Essen?</strong><small>Bewerten Sie uns auf Google</small></div><Icon name="arrow" size={16} /></div></div>;
+}
+
+function DashboardMockup() {
+  return <div className="dashboard" aria-label="Vorschau des Qartivo Dashboards"><aside className="dashboard-sidebar"><div className="dashboard-brand"><span className="mini-q">Q</span> qartivo</div><span className="side-label">WORKSPACE</span><a className="side-active"><Icon name="menu" size={16} /> Übersicht</a><a><Icon name="menu" size={16} /> Menü</a><a><Icon name="star" size={16} /> Bewertungen</a><a><Icon name="qr" size={16} /> QR-Code</a><a><Icon name="nfc" size={16} /> NFC</a><div className="side-bottom"><span>LT</span><small>La Tavola<br /><b>Basel</b></small></div></aside><div className="dashboard-main"><div className="dashboard-header"><div><p className="dash-kicker">MITTWOCH, 18. JUNI 2026</p><h3>Guten Morgen, Luca.</h3></div><span className="notification">◦</span></div><div className="stats-grid"><div><small>MENÜ-AUFRUFE</small><strong>2,846</strong><span className="positive">+18.4%</span></div><div><small>BEWERTUNGEN</small><strong>4.8 <em>★</em></strong><span className="positive">+12.1%</span></div><div><small>AKTIVE QR-CODES</small><strong>08</strong><span className="neutral">Alle aktiv</span></div></div><div className="dashboard-row"><div className="chart-box"><div className="box-title"><b>Menü-Aufrufe</b><span>Letzte 7 Tage⌄</span></div><div className="chart"><span style={{ height: "38%" }} /><span style={{ height: "54%" }} /><span style={{ height: "44%" }} /><span style={{ height: "68%" }} /><span style={{ height: "57%" }} /><span style={{ height: "82%" }} /><span style={{ height: "74%" }} /></div><div className="chart-days"><span>Mo</span><span>Di</span><span>Mi</span><span>Do</span><span>Fr</span><span>Sa</span><span>So</span></div></div><div className="activity-box"><div className="box-title"><b>Zuletzt aktiv</b><span>Alle</span></div><p><i className="activity-dot green" /> Menü aktualisiert <small>vor 12 Min.</small></p><p><i className="activity-dot" /> Neue Bewertung <small>vor 38 Min.</small></p><p><i className="activity-dot" /> QR-Code gescannt <small>vor 1 Std.</small></p></div></div></div></div>;
+}
+
 export default function Home() {
-  return (
-    <main className="min-h-screen bg-[#f7f8f5] text-[#17251c]">
-      {/* NAVBAR */}
-      <nav className="sticky top-0 z-50 border-b border-black/5 bg-[#f7f8f5]/90 backdrop-blur-xl">
-        <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4 lg:px-8">
-          <a href="#" className="flex items-center gap-2">
-            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#173c2b] text-lg font-bold text-white">
-              Q
-            </div>
-            <span className="text-xl font-bold tracking-tight">qartivo</span>
-          </a>
-
-          <div className="hidden items-center gap-8 text-sm font-medium md:flex">
-            <a href="#funktionen" className="transition hover:text-[#26734d]">
-              Funktionen
-            </a>
-            <a href="#so-funktionierts" className="transition hover:text-[#26734d]">
-              So funktioniert&apos;s
-            </a>
-            <a href="#preise" className="transition hover:text-[#26734d]">
-              Preise
-            </a>
-            <a href="#demo" className="transition hover:text-[#26734d]">
-              Demo
-            </a>
-          </div>
-
-          <div className="flex items-center gap-3">
-            <a
-              href="#login"
-              className="hidden rounded-full px-4 py-2 text-sm font-semibold transition hover:bg-black/5 sm:block"
-            >
-              Login
-            </a>
-            <a
-              href="#preise"
-              className="rounded-full bg-[#173c2b] px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-[#23573e] hover:shadow-md"
-            >
-              Kostenlos starten
-            </a>
-          </div>
-        </div>
-      </nav>
-
-      {/* HERO */}
-      <section className="relative overflow-hidden">
-        <div className="absolute -left-40 -top-40 h-96 w-96 rounded-full bg-[#cfe8d5] opacity-50 blur-3xl" />
-        <div className="absolute -right-40 top-20 h-96 w-96 rounded-full bg-[#dcebd8] opacity-60 blur-3xl" />
-
-        <div className="relative mx-auto grid max-w-7xl gap-16 px-6 pb-24 pt-20 lg:grid-cols-2 lg:items-center lg:px-8 lg:pb-32 lg:pt-28">
-          <div>
-            <div className="mb-7 inline-flex items-center gap-2 rounded-full border border-[#bad4c1] bg-white/70 px-4 py-2 text-sm font-medium text-[#28563c]">
-              <span className="h-2 w-2 rounded-full bg-[#4c9a68]" />
-              Die digitale Lösung für moderne Restaurants
-            </div>
-
-            <h1 className="max-w-3xl text-5xl font-bold leading-[1.05] tracking-[-0.04em] sm:text-6xl lg:text-7xl">
-              Ihr Restaurant.
-              <br />
-              <span className="text-[#2f7d51]">Digitaler.</span>
-              <br />
-              Einfacher.
-            </h1>
-
-            <p className="mt-7 max-w-xl text-lg leading-8 text-[#59665d]">
-              Mit Qartivo verwandeln Sie Ihr Restaurant in ein modernes
-              digitales Erlebnis – mit QR-Menü, Google Bewertungen, NFC und
-              zentraler Verwaltung.
-            </p>
-
-            <div className="mt-9 flex flex-col gap-3 sm:flex-row">
-              <a
-                href="#preise"
-                className="rounded-full bg-[#173c2b] px-7 py-4 text-center font-semibold text-white shadow-lg shadow-[#173c2b]/15 transition hover:-translate-y-0.5 hover:bg-[#23573e]"
-              >
-                Jetzt kostenlos starten →
-              </a>
-
-              <a
-                href="#demo"
-                className="rounded-full border border-black/10 bg-white px-7 py-4 text-center font-semibold transition hover:border-black/20 hover:bg-white/80"
-              >
-                Demo ansehen
-              </a>
-            </div>
-
-            <div className="mt-9 flex flex-wrap gap-x-7 gap-y-3 text-sm text-[#68736c]">
-              <span>✓ Keine Kreditkarte</span>
-              <span>✓ Schnell eingerichtet</span>
-              <span>✓ Mobil optimiert</span>
-            </div>
-          </div>
-
-          {/* HERO MOCKUP */}
-          <div id="demo" className="relative">
-            <div className="absolute -inset-5 rounded-[40px] bg-[#dcebdc]/70 blur-2xl" />
-
-            <div className="relative mx-auto max-w-md rotate-[1deg] rounded-[30px] border border-black/10 bg-white p-3 shadow-2xl shadow-black/10">
-              <div className="overflow-hidden rounded-[23px] bg-[#f5f7f3]">
-                <div className="bg-[#173c2b] px-6 pb-8 pt-6 text-white">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="text-xs uppercase tracking-[0.2em] text-white/60">
-                        Restaurant
-                      </p>
-                      <h3 className="mt-1 text-2xl font-bold">La Tavola</h3>
-                    </div>
-                    <div className="flex h-11 w-11 items-center justify-center rounded-full bg-white text-lg text-[#173c2b]">
-                      LT
-                    </div>
-                  </div>
-                  <p className="mt-4 text-sm text-white/70">
-                    Italienische Küche · Basel
-                  </p>
-                </div>
-
-                <div className="space-y-4 p-5">
-                  <div className="flex gap-2 overflow-hidden">
-                    {["Antipasti", "Pizza", "Pasta", "Dessert"].map(
-                      (category, index) => (
-                        <span
-                          key={category}
-                          className={`whitespace-nowrap rounded-full px-4 py-2 text-xs font-semibold ${
-                            index === 0
-                              ? "bg-[#173c2b] text-white"
-                              : "bg-white text-[#5e685f]"
-                          }`}
-                        >
-                          {category}
-                        </span>
-                      ),
-                    )}
-                  </div>
-
-                  {[
-                    ["Burrata", "Tomate · Basilikum · Olivenöl", "14.50 €"],
-                    ["Bruschetta", "Tomate · Knoblauch · Basilikum", "9.50 €"],
-                    ["Vitello Tonnato", "Kalb · Thunfisch · Kapern", "16.90 €"],
-                  ].map(([name, description, price]) => (
-                    <div
-                      key={name}
-                      className="rounded-2xl border border-black/5 bg-white p-4 shadow-sm"
-                    >
-                      <div className="flex items-start justify-between gap-4">
-                        <div>
-                          <h4 className="font-bold">{name}</h4>
-                          <p className="mt-1 text-xs leading-5 text-[#7a837d]">
-                            {description}
-                          </p>
-                        </div>
-                        <span className="whitespace-nowrap text-sm font-bold text-[#2f7d51]">
-                          {price}
-                        </span>
-                      </div>
-                    </div>
-                  ))}
-
-                  <div className="rounded-2xl bg-[#e7f1e8] p-4">
-                    <div className="flex items-center gap-3">
-                      <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#173c2b] text-white">
-                        ★
-                      </div>
-                      <div>
-                        <p className="text-sm font-bold">Gefällt Ihnen unser Essen?</p>
-                        <p className="text-xs text-[#667269]">
-                          Bewerten Sie uns auf Google
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div className="absolute -bottom-5 -left-5 rounded-2xl border border-black/5 bg-white px-5 py-4 shadow-xl">
-              <div className="flex items-center gap-3">
-                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#e6f1e7] text-[#2f7d51]">
-                  ★
-                </div>
-                <div>
-                  <p className="text-sm font-bold">Google Bewertungen</p>
-                  <p className="text-xs text-[#7b847d]">Mehr Sichtbarkeit</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* TRUST BAR */}
-      <section className="border-y border-black/5 bg-white">
-        <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-5 px-6 py-7 text-center sm:flex-row sm:text-left lg:px-8">
-          <p className="text-sm font-medium text-[#707a73]">
-            Entwickelt für die digitale Gastronomie
-          </p>
-
-          <div className="flex flex-wrap justify-center gap-6 text-sm font-semibold text-[#8a938c] sm:gap-10">
-            <span>RESTAURANTS</span>
-            <span>CAFÉS</span>
-            <span>BARS</span>
-            <span>HOTELS</span>
-          </div>
-        </div>
-      </section>
-
-      {/* FEATURES */}
-      <section id="funktionen" className="mx-auto max-w-7xl px-6 py-24 lg:px-8 lg:py-32">
-        <div className="max-w-2xl">
-          <p className="text-sm font-bold uppercase tracking-[0.18em] text-[#2f7d51]">
-            Alles in einer Plattform
-          </p>
-          <h2 className="mt-4 text-4xl font-bold tracking-[-0.03em] sm:text-5xl">
-            Alles, was Ihr Restaurant digital braucht.
-          </h2>
-          <p className="mt-5 text-lg leading-8 text-[#68736c]">
-            Qartivo verbindet die wichtigsten digitalen Werkzeuge für
-            Restaurants in einer einfachen Plattform.
-          </p>
-        </div>
-
-        <div className="mt-14 grid gap-5 md:grid-cols-2 lg:grid-cols-4">
-          {features.map((feature) => (
-            <div
-              key={feature.title}
-              className="group rounded-3xl border border-black/5 bg-white p-7 shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-xl"
-            >
-              <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[#e5f0e6] text-xl font-bold text-[#2f7d51] transition group-hover:bg-[#173c2b] group-hover:text-white">
-                {feature.icon}
-              </div>
-
-              <h3 className="mt-6 text-xl font-bold">{feature.title}</h3>
-
-              <p className="mt-3 text-sm leading-6 text-[#707a73]">
-                {feature.description}
-              </p>
-
-              <a
-                href="#"
-                className="mt-6 inline-flex text-sm font-semibold text-[#2f7d51]"
-              >
-                Mehr erfahren →
-              </a>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* HOW IT WORKS */}
-      <section
-        id="so-funktionierts"
-        className="bg-[#173c2b] text-white"
-      >
-        <div className="mx-auto max-w-7xl px-6 py-24 lg:px-8 lg:py-32">
-          <div className="max-w-2xl">
-            <p className="text-sm font-bold uppercase tracking-[0.18em] text-[#9ed0aa]">
-              Einfacher Start
-            </p>
-
-            <h2 className="mt-4 text-4xl font-bold tracking-[-0.03em] sm:text-5xl">
-              In wenigen Minuten digital.
-            </h2>
-
-            <p className="mt-5 text-lg leading-8 text-white/65">
-              Kein kompliziertes System. Kein langes Setup. Qartivo ist so
-              aufgebaut, dass Sie schnell loslegen können.
-            </p>
-          </div>
-
-          <div className="mt-16 grid gap-8 md:grid-cols-3">
-            {steps.map((step) => (
-              <div
-                key={step.number}
-                className="rounded-3xl border border-white/10 bg-white/5 p-8"
-              >
-                <span className="text-sm font-bold text-[#9ed0aa]">
-                  {step.number}
-                </span>
-
-                <h3 className="mt-8 text-2xl font-bold">{step.title}</h3>
-
-                <p className="mt-3 leading-7 text-white/60">
-                  {step.description}
-                </p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* PRICING */}
-      <section id="preise" className="mx-auto max-w-7xl px-6 py-24 lg:px-8 lg:py-32">
-        <div className="mx-auto max-w-2xl text-center">
-          <p className="text-sm font-bold uppercase tracking-[0.18em] text-[#2f7d51]">
-            Transparente Preise
-          </p>
-
-          <h2 className="mt-4 text-4xl font-bold tracking-[-0.03em] sm:text-5xl">
-            Wählen Sie den passenden Plan.
-          </h2>
-
-          <p className="mt-5 text-lg leading-8 text-[#68736c]">
-            Starten Sie kostenlos und erweitern Sie Qartivo, wenn Ihr
-            Restaurant wächst.
-          </p>
-        </div>
-
-        <div className="mt-14 grid gap-5 lg:grid-cols-3">
-          {plans.map((plan) => (
-            <div
-              key={plan.name}
-              className={`relative rounded-3xl border p-8 ${
-                plan.featured
-                  ? "border-[#2f7d51] bg-[#173c2b] text-white shadow-2xl shadow-[#173c2b]/20"
-                  : "border-black/5 bg-white"
-              }`}
-            >
-              {plan.featured && (
-                <div className="absolute right-6 top-6 rounded-full bg-[#9ed0aa] px-3 py-1 text-xs font-bold text-[#173c2b]">
-                  Beliebt
-                </div>
-              )}
-
-              <h3 className="text-xl font-bold">{plan.name}</h3>
-
-              <p
-                className={`mt-3 min-h-12 text-sm leading-6 ${
-                  plan.featured ? "text-white/60" : "text-[#707a73]"
-                }`}
-              >
-                {plan.description}
-              </p>
-
-              <div className="mt-8 flex items-end gap-2">
-                <span className="text-5xl font-bold">{plan.price}€</span>
-                <span
-                  className={`mb-2 text-sm ${
-                    plan.featured ? "text-white/50" : "text-[#7c857e]"
-                  }`}
-                >
-                  / Monat
-                </span>
-              </div>
-
-              <a
-                href="#"
-                className={`mt-8 block rounded-full px-5 py-3.5 text-center text-sm font-bold transition ${
-                  plan.featured
-                    ? "bg-white text-[#173c2b] hover:bg-[#edf5ee]"
-                    : "bg-[#173c2b] text-white hover:bg-[#23573e]"
-                }`}
-              >
-                Kostenlos starten
-              </a>
-
-              <div
-                className={`my-8 h-px ${
-                  plan.featured ? "bg-white/10" : "bg-black/5"
-                }`}
-              />
-
-              <ul className="space-y-4">
-                {plan.features.map((feature) => (
-                  <li key={feature} className="flex gap-3 text-sm">
-                    <span className="font-bold text-[#65a878]">✓</span>
-                    <span
-                      className={
-                        plan.featured ? "text-white/75" : "text-[#59645d]"
-                      }
-                    >
-                      {feature}
-                    </span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* CTA */}
-      <section id="login" className="px-6 pb-24 lg:px-8 lg:pb-32">
-        <div className="mx-auto max-w-7xl overflow-hidden rounded-[36px] bg-[#dcebdc] px-8 py-16 text-center sm:px-12 lg:px-20 lg:py-20">
-          <p className="text-sm font-bold uppercase tracking-[0.18em] text-[#2f7d51]">
-            Qartivo
-          </p>
-
-          <h2 className="mx-auto mt-4 max-w-3xl text-4xl font-bold tracking-[-0.03em] sm:text-5xl">
-            Bereit für das digitale Restaurant?
-          </h2>
-
-          <p className="mx-auto mt-5 max-w-2xl text-lg leading-8 text-[#637066]">
-            Erstellen Sie Ihr digitales Restaurantprofil und entdecken Sie,
-            wie einfach Gastronomie digital sein kann.
-          </p>
-
-          <a
-            href="#preise"
-            className="mt-8 inline-flex rounded-full bg-[#173c2b] px-7 py-4 font-semibold text-white shadow-lg transition hover:bg-[#23573e]"
-          >
-            Jetzt kostenlos starten →
-          </a>
-        </div>
-      </section>
-
-      {/* FOOTER */}
-      <footer className="border-t border-black/5 bg-white">
-        <div className="mx-auto flex max-w-7xl flex-col gap-8 px-6 py-10 lg:px-8">
-          <div className="flex flex-col justify-between gap-8 sm:flex-row">
-            <div>
-              <div className="flex items-center gap-2">
-                <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-[#173c2b] text-sm font-bold text-white">
-                  Q
-                </div>
-                <span className="text-lg font-bold">qartivo</span>
-              </div>
-
-              <p className="mt-3 max-w-xs text-sm leading-6 text-[#7a837d]">
-                Die digitale Plattform für moderne Restaurants.
-              </p>
-            </div>
-
-            <div className="flex flex-wrap gap-x-8 gap-y-3 text-sm text-[#68736c]">
-              <a href="#" className="hover:text-[#2f7d51]">
-                Impressum
-              </a>
-              <a href="#" className="hover:text-[#2f7d51]">
-                Datenschutz
-              </a>
-              <a href="#" className="hover:text-[#2f7d51]">
-                Kontakt
-              </a>
-            </div>
-          </div>
-
-          <div className="border-t border-black/5 pt-6 text-sm text-[#929992]">
-            © 2026 qartivo. Alle Rechte vorbehalten.
-          </div>
-        </div>
-      </footer>
-    </main>
-  );
+  return <main id="top">
+    <nav className="site-nav"><div className="nav-inner"><Logo /><div className="nav-links"><a href="#funktionen">Funktionen</a><a href="#so-funktionierts">So funktioniert&apos;s</a><a href="#preise">Preise</a><a href="#demo">Demo</a></div><div className="nav-actions"><a href="#login" className="login-link">Login</a><a href="#preise" className="button button-small">Kostenlos starten <Icon name="arrow" size={15} /></a></div><details className="mobile-menu"><summary aria-label="Menü öffnen"><span /><span /></summary><div className="mobile-menu-panel"><a href="#funktionen">Funktionen</a><a href="#so-funktionierts">So funktioniert&apos;s</a><a href="#preise">Preise</a><a href="#demo">Demo</a><a href="#login">Login</a><a href="#preise" className="button">Kostenlos starten</a></div></details></div></nav>
+    <section className="hero"><div className="hero-inner"><div className="hero-copy"><div className="eyebrow"><span className="eyebrow-dot" /> Die digitale Basis für Ihr Restaurant</div><h1>Ihr Restaurant.<br /><span>Digitaler.</span><br />Einfacher.</h1><p>Mit Qartivo verwandeln Sie Ihr Restaurant in ein modernes digitales Erlebnis – mit QR-Menü, Google Bewertungen, NFC und zentraler Verwaltung.</p><div className="hero-actions"><a href="#preise" className="button">Kostenlos starten <Icon name="arrow" size={17} /></a><a href="#demo" className="text-button">Demo ansehen <Icon name="arrow" size={17} /></a></div><div className="hero-proof"><span><Icon name="check" size={14} /> Keine Kreditkarte</span><span><Icon name="check" size={14} /> In 5 Min. eingerichtet</span></div></div><div id="demo" className="hero-product"><div className="product-glow" /><div className="product-window"><div className="window-bar"><span /><span /><span /><small>qartivo / la-tavola</small></div><MenuMockup /></div><div className="floating-badge"><span className="badge-icon"><Icon name="star" size={16} /></span><div><strong>4.8 / 5.0</strong><small>Google Bewertung</small></div></div></div></div></section>
+    <section className="trust-strip"><div className="content-width trust-inner"><span className="trust-intro">Alles, was digital zählt.</span><div className="trust-items"><span><Icon name="menu" size={17} /> Digitales Menü</span><span><Icon name="qr" size={17} /> QR-Code</span><span><Icon name="star" size={17} /> Google Bewertungen</span><span><Icon name="nfc" size={17} /> NFC</span><span><Icon name="check" size={17} /> Zentrale Verwaltung</span></div></div></section>
+    <section id="funktionen" className="section features-section"><div className="content-width"><div className="section-heading"><div><p className="section-label">Die Qartivo Plattform</p><h2>Alles, was Ihr Restaurant<br /><span>digital braucht.</span></h2></div><p>Weniger Tools. Weniger Aufwand.<br />Mehr Zeit für Ihre Gäste.</p></div><div className="feature-grid">{featureCards.map((feature) => <article className="feature-card" key={feature.title}><div className="feature-icon"><Icon name={feature.icon} size={22} /></div><p className="card-eyebrow">{feature.eyebrow}</p><h3>{feature.title}</h3><p>{feature.description}</p><a href="#demo" aria-label={`${feature.title} entdecken`}><Icon name="arrow" size={17} /></a></article>)}</div></div></section>
+    <section className="showcase-section"><div className="content-width showcase-grid"><div className="showcase-copy"><p className="section-label">Ein Ort für alles</p><h2>Ein System.<br /><span>Alles unter Kontrolle.</span></h2><p>Von der ersten Einrichtung bis zur täglichen Auswertung: Qartivo gibt Ihnen die Übersicht, die Sie brauchen, und lässt den Rest einfach aussehen.</p><div className="showcase-list"><div><span>01</span><p><strong>Einfach verwalten</strong><br />Änderungen sind sofort live.</p></div><div><span>02</span><p><strong>Klar entscheiden</strong><br />Wichtige Zahlen auf einen Blick.</p></div></div><a href="#preise" className="text-button dark-button">Qartivo entdecken <Icon name="arrow" size={17} /></a></div><div className="dashboard-wrap"><DashboardMockup /></div></div></section>
+    <section id="so-funktionierts" className="section steps-section"><div className="content-width"><div className="center-heading"><p className="section-label">Der einfache Start</p><h2>In drei Schritten <span>digital.</span></h2><p>Von der Idee zum ersten Scan. Ohne Schulung, ohne Agentur, ohne Umwege.</p></div><div className="steps-grid">{steps.map((step, index) => <div className="step" key={step.number}><div className="step-top"><span>{step.number}</span>{index < steps.length - 1 && <i />}</div><h3>{step.title}</h3><p>{step.description}</p></div>)}</div></div></section>
+    <section className="reviews-section"><div className="content-width reviews-grid"><div className="review-quote"><p className="section-label">Ihre Gäste sprechen für Sie</p><h2>Mehr Bewertungen.<br /><span>Mehr Vertrauen.</span></h2><p>Der Moment nach dem Essen ist der beste Moment für eine Bewertung. Qartivo macht ihn einfach.</p><a href="#preise" className="text-button">Mehr erfahren <Icon name="arrow" size={17} /></a></div><div className="google-card"><div className="google-head"><span className="google-g">G</span><div><strong>Google</strong><small>Bewertungen</small></div><span className="google-dots">•••</span></div><div className="rating-row"><strong>4.8</strong><div><div className="stars">★★★★★</div><small>127 Bewertungen</small></div></div><div className="rating-bars"><span><b>5</b><i><em style={{ width: "88%" }} /></i></span><span><b>4</b><i><em style={{ width: "68%" }} /></i></span><span><b>3</b><i><em style={{ width: "16%" }} /></i></span><span><b>2</b><i><em style={{ width: "8%" }} /></i></span><span><b>1</b><i><em style={{ width: "5%" }} /></i></span></div><div className="recent-review"><div className="review-person"><span>MS</span><strong>Maria S.</strong><small>vor 2 Tagen</small><b>★★★★★</b></div><p>„Wunderbares Essen und ein sehr schöner Abend. Wir kommen gerne wieder!“</p></div></div></div></section>
+    <section id="preise" className="section pricing-section"><div className="content-width"><div className="center-heading"><p className="section-label">Transparent und fair</p><h2>Der passende Plan<br /><span>für Ihren Betrieb.</span></h2><p>Starten Sie kostenlos. Wachsen Sie, wenn Sie bereit sind.</p></div><div className="pricing-grid">{plans.map((plan) => <article className={`pricing-card ${plan.featured ? "featured" : ""}`} key={plan.name}>{plan.featured && <div className="popular">Beliebt</div>}<p className="plan-name">{plan.name}</p><p className="plan-description">{plan.description}</p><div className="price"><strong>{plan.price} €</strong><span>/ Monat</span></div><a href="#login" className={`button ${plan.featured ? "button-light" : ""}`}>Kostenlos starten <Icon name="arrow" size={16} /></a><div className="plan-divider" /><ul>{plan.features.map((feature) => <li key={feature}><Icon name="check" size={16} /> {feature}</li>)}</ul></article>)}</div></div></section>
+    <section id="login" className="final-cta"><div className="content-width cta-inner"><div><p className="section-label">Der nächste Schritt</p><h2>Bereit für ein<br /><span>moderneres Restaurant?</span></h2></div><div><p>Starten Sie heute kostenlos mit Qartivo. Ihre Gäste werden den Unterschied merken.</p><a href="#preise" className="button button-light">Kostenlos starten <Icon name="arrow" size={17} /></a></div></div></section>
+    <footer><div className="content-width footer-top"><div><Logo light /><p>Die digitale Basis für moderne Restaurants.</p></div><div className="footer-links"><div><strong>Produkt</strong><a href="#funktionen">Funktionen</a><a href="#preise">Preise</a><a href="#demo">Demo</a></div><div><strong>Unternehmen</strong><a href="#so-funktionierts">Über Qartivo</a><a href="#login">Kontakt</a><a href="#login">Login</a></div><div><strong>Rechtliches</strong><a href="#login">Impressum</a><a href="#login">Datenschutz</a></div></div></div><div className="content-width footer-bottom"><span>© 2026 qartivo. Alle Rechte vorbehalten.</span><span>Made for hospitality.</span></div></footer>
+  </main>;
 }
